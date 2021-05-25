@@ -30,14 +30,16 @@
       ></b-form-input>
       <b-button @click="keywordSearch">키워드 검색</b-button>
     </div>
-    <div class="col-sm-4"></div>
-    <div id="map" style="width: 100%; height: 350px" class="col-sm-8"></div>
+    <h4>선택 리스트가 아래에 표시됩니다.</h4>
+    <div>
+      <b-table striped hover :items="selectList"></b-table>
+    </div>
+    <div id="map" style="width: 100%; height: 350px"></div>
   </div>
 </template>
 
 <script>
 import AddressAPI from "@/components/AddressAPI.vue";
-
 export default {
   components: {
     AddressAPI,
@@ -172,41 +174,38 @@ export default {
         position: new kakao.maps.LatLng(place.y, place.x),
       });
 
-      kakao.maps.event.addListener(marker, "click", function () {
-        var content = document.createElement("div");
-
-        var info = document.createElement("span");
-        info.appendChild(document.createTextNode(place.place_name));
-        content.appendChild(info);
-        var selectBtn = document.createElement("button");
-        selectBtn.appendChild(document.createTextNode("선택"));
-        var closeBtn = document.createElement("button");
-        closeBtn.appendChild(document.createTextNode("닫기"));
-        //선택 이벤트
-        selectBtn.onclick = function () {
-          this.$data["selectList"].push({
-            value: place.place_name,
-            position: overlay.getPostion(),
-          });
-          overlay.setMap(null);
-        };
-        // 닫기 이벤트 추가
-        closeBtn.onclick = function () {
-          overlay.setMap(null);
-        };
-        content.appendChild(selectBtn);
-        content.appendChild(closeBtn);
-        let overlay = new kakao.maps.CustomOverlay({
-          content: content,
-          map: marker.getMap(),
-          position: marker.getPosition(),
+      var content = document.createElement("div");
+      var info = document.createElement("span");
+      info.appendChild(document.createTextNode(place.place_name));
+      content.appendChild(info);
+      var selectBtn = document.createElement("button");
+      selectBtn.appendChild(document.createTextNode("선택"));
+      var closeBtn = document.createElement("button");
+      closeBtn.appendChild(document.createTextNode("닫기"));
+      //선택 이벤트
+      selectBtn.onclick = () => {
+        this.$data["selectList"].push({
+          value: place.place_name,
+          lat: overlay.getPosition().La,
+          lng: overlay.getPosition().Ma,
         });
         overlay.setMap(null);
-        kakao.maps.event.addListener(marker, "click", function () {
-          overlay.setMap(marker.getMap());
-        });
+      };
+      // 닫기 이벤트 추가
+      closeBtn.onclick = function () {
+        overlay.setMap(null);
+      };
+      content.appendChild(selectBtn);
+      content.appendChild(closeBtn);
+      let overlay = new kakao.maps.CustomOverlay({
+        content: content,
+        map: marker.getMap(),
+        position: marker.getPosition(),
       });
-
+      overlay.setMap(null);
+      kakao.maps.event.addListener(marker, "click", function () {
+        overlay.setMap(marker.getMap());
+      });
       this.$data["clusterer"].addMarker(marker);
     },
   },
