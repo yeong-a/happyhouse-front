@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div>
         <b-form-select
             style="margin-left: 30px"
             name="select"
@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import AddressApi from "@/components/addressAPI.vue";
+/* global kakao */
+import AddressApi from "@/components/AddressAPI.vue";
 export default {
     components: {
         AddressApi,
@@ -102,10 +103,9 @@ export default {
     methods: {
         addKakaoMapScript() {
             const script = document.createElement("script");
-            /* global kakao */
             script.onload = () => kakao.maps.load(this.initMap);
             script.src =
-                "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=a28733cc66030bea8246c568ee6595d7";
+                "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=96bb589a4d5df7cd55f2ca8c67b7c7fc&libraries=services,clusterer,drawing";
             document.head.appendChild(script);
         },
         initMap() {

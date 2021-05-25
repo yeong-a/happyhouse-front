@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import JoinPage from "@/page/joinpage.vue";
-import DetailPage from "@/page/detailpage.vue";
-import kakaomap from '@/components/kakaomap.vue';
-import UpdatePage from "@/page/updatepage.vue";
-import SearchPage from "@/page/searchpage.vue";
+import JoinPage from "@/page/JoinPage.vue";
+import DetailPage from "@/page/DetailPage.vue";
+import MainPage from "@/page/MainPage.vue";
+import UpdatePage from "@/page/UpdatePage.vue";
+import SearchPage from "@/page/SearchPage.vue";
 Vue.use(VueRouter);
 
 export const router = new VueRouter({
@@ -12,28 +12,28 @@ export const router = new VueRouter({
   routes: [
     {
       path: "/",
-      name: "main",
-      component: kakaomap,
+      name: "main-page",
+      component: MainPage,
     },
     {
-      path: "/joinpage",
-      name: "joinpage",
+      path: "/join",
+      name: "join-page",
       component: JoinPage,
     },
     {
-      path: "/detailpage",
-      name: "detailpage",
+      path: "/detail",
+      name: "detail-page",
       component: DetailPage,
     },
     {
-      path: "/updatepage",
-      name: "updatepage",
+      path: "/update",
+      name: "update-page",
       component: UpdatePage,
     },
     {
-      path: "/searchpage",
-      name: "searchpage",
+      path: "/search",
+      name: "search-page",
       component: SearchPage,
-    }
+    },
   ],
 });
