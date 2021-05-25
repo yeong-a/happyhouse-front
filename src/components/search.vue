@@ -33,6 +33,7 @@
         <h4>선택 리스트가 아래에 표시됩니다.</h4>
         <div>
             <b-table striped hover :items="selectList"></b-table>
+            <b-button @click="draw">화면에 표시</b-button>
         </div>
         <div id="map" style="width: 100%; height: 350px"></div>
     </div>
@@ -211,6 +212,28 @@ export default {
             });
 
             this.$data["clusterer"].addMarker(marker);
+        },
+        draw() {
+            var polygonPath = [];
+            this.$data["selectList"].forEach(function (item) {
+                console.log(item.lat);
+                console.log(item.lng);
+                polygonPath.push(new kakao.maps.LatLng(item.lat, item.lng));
+            });
+
+            // 지도에 표시할 다각형을 생성합니다
+            var polygon = new kakao.maps.Polygon({
+                path: polygonPath, // 그려질 다각형의 좌표 배열입니다
+                strokeWeight: 3, // 선의 두께입니다
+                strokeColor: "#39DE2A", // 선의 색깔입니다
+                strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                strokeStyle: "longdash", // 선의 스타일입니다
+                fillColor: "#A2FF99", // 채우기 색깔입니다
+                fillOpacity: 0.7, // 채우기 불투명도 입니다
+            });
+
+            // 지도에 다각형을 표시합니다
+            polygon.setMap(this.$data["map"]);
         },
     },
 };
