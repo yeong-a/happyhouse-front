@@ -1,23 +1,23 @@
 <template>
-    <div class="row">
-        <div class="col-sm-4">
-            <list></list>
-        </div>
-        <div class="col-sm-8">
-            <kakaomap></kakaomap>
-        </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <DetailList></DetailList>
     </div>
+    <div class="col-sm-8">
+      <Map></Map>
+    </div>
+  </div>
 </template>
 
 <script>
-import list from "@/components/detaillist.vue";
-import kakaomap from "@/components/kakaomap.vue";
+import DetailList from "@/components/DetailList.vue";
+import Map from "@/components/Map.vue";
 export default {
-    name: "detail",
-    components: {
-        kakaomap,
-        list,
-    },
+  name: "DetailPage",
+  components: {
+    Map,
+    DetailList,
+  },
 };
 </script>
 

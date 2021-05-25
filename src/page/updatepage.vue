@@ -1,15 +1,15 @@
 <template>
-    <update></update>
+  <Update></Update>
 </template>
 
 <script>
 import Update from "@/components/Update.vue";
 
 export default {
-    name: "updatepage",
-    components: {
-        Update,
-    },
+  name: "update-page",
+  components: {
+    Update,
+  },
 };
 </script>
 
