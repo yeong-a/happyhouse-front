@@ -190,8 +190,8 @@ export default {
             selectBtn.onclick = () => {
                 this.$data["selectList"].push({
                     value: place.place_name,
-                    lat: overlay.getPosition().La,
-                    lng: overlay.getPosition().Ma,
+                    lat: overlay.getPosition().Ma,
+                    lng: overlay.getPosition().La,
                 });
                 overlay.setMap(null);
             };
@@ -216,7 +216,7 @@ export default {
         draw() {
             var polygonPath = [];
             this.$data["selectList"].forEach(function (item) {
-                polygonPath.push(new kakao.maps.LatLng(item.lng, item.lat));
+                polygonPath.push(new kakao.maps.LatLng(item.lat, item.lng));
             });
 
             // 지도에 표시할 다각형을 생성합니다
@@ -232,6 +232,9 @@ export default {
 
             // 지도에 다각형을 표시합니다
             polygon.setMap(this.$data["map"]);
+            kakao.maps.event.addListener(polygon, "click", function () {
+                polygon.setMap(null);
+            });
         },
     },
 };
