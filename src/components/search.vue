@@ -216,9 +216,7 @@ export default {
         draw() {
             var polygonPath = [];
             this.$data["selectList"].forEach(function (item) {
-                console.log(item.lat);
-                console.log(item.lng);
-                polygonPath.push(new kakao.maps.LatLng(item.lat, item.lng));
+                polygonPath.push(new kakao.maps.LatLng(item.lng, item.lat));
             });
 
             // 지도에 표시할 다각형을 생성합니다
