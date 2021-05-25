@@ -175,39 +175,36 @@ export default {
                 position: new kakao.maps.LatLng(place.y, place.x),
             });
 
+            var content = document.createElement("div");
+            var info = document.createElement("span");
+            info.appendChild(document.createTextNode(place.place_name));
+            content.appendChild(info);
+            var selectBtn = document.createElement("button");
+            selectBtn.appendChild(document.createTextNode("선택"));
+            var closeBtn = document.createElement("button");
+            closeBtn.appendChild(document.createTextNode("닫기"));
+            //선택 이벤트
+            selectBtn.onclick = function () {
+                this.$data["selectList"].push({
+                    value: place.place_name,
+                    position: overlay.getPostion(),
+                });
+                overlay.setMap(null);
+            };
+            // 닫기 이벤트 추가
+            closeBtn.onclick = function () {
+                overlay.setMap(null);
+            };
+            content.appendChild(selectBtn);
+            content.appendChild(closeBtn);
+            let overlay = new kakao.maps.CustomOverlay({
+                content: content,
+                map: marker.getMap(),
+                position: marker.getPosition(),
+            });
+            overlay.setMap(null);
             kakao.maps.event.addListener(marker, "click", function () {
-                var content = document.createElement("div");
-
-                var info = document.createElement("span");
-                info.appendChild(document.createTextNode(place.place_name));
-                content.appendChild(info);
-                var selectBtn = document.createElement("button");
-                selectBtn.appendChild(document.createTextNode("선택"));
-                var closeBtn = document.createElement("button");
-                closeBtn.appendChild(document.createTextNode("닫기"));
-                //선택 이벤트
-                selectBtn.onclick = function () {
-                    this.$data["selectList"].push({
-                        value: place.place_name,
-                        position: overlay.getPostion(),
-                    });
-                    overlay.setMap(null);
-                };
-                // 닫기 이벤트 추가
-                closeBtn.onclick = function () {
-                    overlay.setMap(null);
-                };
-                content.appendChild(selectBtn);
-                content.appendChild(closeBtn);
-                let overlay = new kakao.maps.CustomOverlay({ // eslint-disable-line no-unused-vars
-                    content: content,
-                    map: marker.getMap(),
-                    position: marker.getPosition(),
-                });
-
-                kakao.maps.event.addListener(marker, "click", function () {
-                    overlay.setMap(marker.getMap());
-                });
+                overlay.setMap(marker.getMap());
             });
 
             this.$data["clusterer"].addMarker(marker);
