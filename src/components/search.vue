@@ -30,14 +30,16 @@
             ></b-form-input>
             <b-button @click="keywordSearch">키워드 검색</b-button>
         </div>
-        <div class="col-sm-4"></div>
-        <div id="map" style="width: 100%; height: 350px" class="col-sm-8"></div>
+        <h4>선택 리스트가 아래에 표시됩니다.</h4>
+        <div>
+            <b-table striped hover :items="selectList"></b-table>
+        </div>
+        <div id="map" style="width: 100%; height: 350px"></div>
     </div>
 </template>
 
 <script>
 import AddressApi from "@/components/addressAPI.vue";
-
 export default {
     components: {
         AddressApi,
@@ -184,10 +186,11 @@ export default {
             var closeBtn = document.createElement("button");
             closeBtn.appendChild(document.createTextNode("닫기"));
             //선택 이벤트
-            selectBtn.onclick = function () {
+            selectBtn.onclick = () => {
                 this.$data["selectList"].push({
                     value: place.place_name,
-                    position: overlay.getPostion(),
+                    lat: overlay.getPosition().La,
+                    lng: overlay.getPosition().Ma,
                 });
                 overlay.setMap(null);
             };
