@@ -25,6 +25,9 @@ export default new Vuex.Store({
     getInfo: (state, payload) => {
       state.user = payload.user;
     },
+    modifyInfo: (state, payload) => {
+      state.user = payload.user;
+    },
   },
   actions: {
     login(store, payload) {
@@ -66,6 +69,23 @@ export default new Vuex.Store({
           }
         );
       });
+    },
+    modify(store, payload) {
+      http
+        .put(`happyhouse/user/update`, {
+          name: payload.user.name,
+          address: payload.user.address,
+          detailAddress: payload.user.detailAddress,
+        })
+        .then(() => {
+          console.log("수정 성공");
+          store.commit("modifyInfo", {
+            user: payload.user,
+          });
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+        });
     },
   },
   modules: {},
