@@ -1,16 +1,16 @@
 <template>
-    <div>
-        <create-form type="create" />
-    </div>
+  <div>
+    <create-form type="create" />
+  </div>
 </template>
 
 <script>
 import CreateForm from "@/components/QNA/QnaForm.vue";
 export default {
-    name: "create",
-    components: {
-        CreateForm,
-    },
+  name: "create",
+  components: {
+    CreateForm,
+  },
 };
 </script>
 

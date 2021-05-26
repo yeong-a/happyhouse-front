@@ -10,6 +10,16 @@
       ></b-form-input>
       <label for="userEmail">User email</label>
       <b-form-input
+        v-if="type == 'update'"
+        type="email"
+        v-model="email"
+        :state="emailvalidation"
+        id="email"
+        required
+        readonly
+      ></b-form-input>
+      <b-form-input
+        v-else
         type="email"
         v-model="email"
         :state="emailvalidation"
@@ -22,6 +32,15 @@
       <b-form-valid-feedback :state="emailvalidation">
         Looks Good.
       </b-form-valid-feedback>
+      <label v-if="type == 'update'" for="text-password">Pre-Password</label>
+      <b-form-input
+        v-if="type == 'update'"
+        type="password"
+        id="pre_password"
+        aria-describedby="password-help-block"
+        required
+        :state="uservalidation"
+      ></b-form-input>
       <label for="text-password">Password</label>
       <b-form-input
         type="password"
@@ -68,11 +87,24 @@ export default {
     return {
       name: "",
       email: "",
+      prePassword: "",
       password: "",
       pwcheck: "",
       address: "",
       detailAddress: "",
     };
+  },
+  created() {
+    //   if (this.type === "update") {
+    // http
+    //   .get(`/happyhouse/qnaboard/${this.$route.params.no}`)
+    //   .then(({ data }) => {
+    //     this.email = data.email;
+    //     this.prePassword = data.password;
+    //   })
+    //   .catch(() => {
+    //     alert("에러가 발생했습니다.");
+    //   });
   },
   computed: {
     emailvalidation() {
@@ -80,6 +112,9 @@ export default {
     },
     pwvalidation() {
       return this.pwcheck.length > 2 && this.password === this.pwcheck;
+    },
+    uservalidation() {
+      return this.$data["prePassword"] === this.pre_password;
     },
   },
 };

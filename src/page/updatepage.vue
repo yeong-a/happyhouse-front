@@ -1,9 +1,9 @@
 <template>
-  <Update></Update>
+  <Update type="update"></Update>
 </template>
 
 <script>
-import Update from "@/components/Update.vue";
+import Update from "@/components/Join.vue";
 
 export default {
   name: "update-page",

@@ -32,7 +32,7 @@
     </div>
     <h4>선택 리스트가 아래에 표시됩니다.</h4>
     <div>
-      <b-table striped hover :items="selectList"></b-table>
+      <b-table striped :items="showList"> </b-table>
       <b-button @click="draw">화면에 표시</b-button>
       <b-button @click="reset">리스트 초기화</b-button>
       <b-button>매매 정보 추천받기</b-button>
@@ -57,6 +57,7 @@ export default {
       ps: null,
       markers: [],
       clusterer: null,
+      showList: [],
       selectList: [],
       select_options: [
         "주소 기반 검색",
@@ -188,8 +189,12 @@ export default {
       closeBtn.appendChild(document.createTextNode("닫기"));
       //선택 이벤트
       selectBtn.onclick = () => {
-        this.$data["selectList"].push({
+        this.$data["showList"].push({
           value: place.place_name,
+          address: place.address_name,
+          phone: place.phone,
+        });
+        this.$data["selectList"].push({
           lat: overlay.getPosition().Ma,
           lng: overlay.getPosition().La,
         });
@@ -242,4 +247,9 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.map {
+  width: 5000px;
+  height: 4000px;
+}
+</style>
