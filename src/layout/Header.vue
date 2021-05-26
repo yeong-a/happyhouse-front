@@ -80,26 +80,12 @@ export default {
     moveQnaPage() {
       this.$router.push("/qna");
     },
-<<<<<<< HEAD
-    moveSPPage() {},
-    getUserInfo() {
-      this.$store
-        .dispatch("mypage")
-        .then(() => {
-          this.user = this.$store.state.user;
-        })
-        .catch((err) => {
-          console.log(err.response.data.error);
-        });
+    moveSPPage() {
+      this.$router.push("/searchpassword");
     },
-    login() {
-      this.$store
-        .dispatch("login", {
-=======
     async login() {
       try {
         await this.$store.dispatch("login", {
->>>>>>> 66a905248b1b927109e1b25e5352c7f5e062f4ad
           user: {
             email: this.loginUser.email,
             pwd: this.loginUser.pwd,

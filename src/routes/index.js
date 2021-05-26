@@ -55,7 +55,7 @@ export const router = new VueRouter({
       comments: QnaReadPage,
     },
     {
-      path: "/qna/delete/:no",
+      path: "/searchpassword",
       name: "search-password-page",
       comments : SearchPasswordPage
     },
