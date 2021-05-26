@@ -5,7 +5,7 @@
         >주소별 매매가 확인</b-button
       >
       <b-button variant="warning" @click="moveSearchPage">추천 기능</b-button>
-      <b-button variant="warning" @click="moveQnaListPage">QnA 게시판</b-button>
+      <b-button variant="warning" @click="moveQnaPage">QnA 게시판</b-button>
     </div>
     <div class="col-sm-2" v-if="this.user.email == ''">
       <b-button variant="warning" @click="showLoginModal">로그인</b-button>
@@ -86,6 +86,9 @@ export default {
     },
     moveSearchPage() {
       this.$router.push("/search");
+    },
+    moveQnaPage() {
+      this.$router.push("/qna");
     },
     getUserInfo() {
       this.$store
