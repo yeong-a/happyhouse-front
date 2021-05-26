@@ -5,6 +5,7 @@ import DetailPage from "@/page/DetailPage.vue";
 import MainPage from "@/page/MainPage.vue";
 import MyPage from "@/page/MyPage.vue";
 import SearchPage from "@/page/SearchPage.vue";
+import SearchPasswordPage from "@/page/SearchPasswordPage.vue";
 import QnaCreatePage from "@/page/QNA/QnaCreatePage.vue";
 import QnaDeletePage from "@/page/QNA/QnaDeletePage.vue";
 import QnaListPage from "@/page/QNA/QnaListPage.vue";
@@ -63,6 +64,11 @@ export const router = new VueRouter({
       path: "/qna/delete/:no",
       name: "qna-delete-page",
       comments : QnaDeletePage
+    },
+    {
+      path: "/qna/delete/:no",
+      name: "search-password-page",
+      comments : SearchPasswordPage
     },
   ],
 });

@@ -25,7 +25,7 @@
         text-field="value"
         :options="dongOptions"
       ></b-form-select>
-      <b-button style="margin-left: 30px">상세 정보 검색</b-button>
+      <b-button style="margin-left: 30px">매물 표시</b-button>
     </div>
   </div>
 </template>

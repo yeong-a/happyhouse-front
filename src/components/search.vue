@@ -252,4 +252,7 @@ export default {
   width: 5000px;
   height: 4000px;
 }
+.div {
+  background: white;
+}
 </style>
