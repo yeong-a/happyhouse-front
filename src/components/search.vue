@@ -32,8 +32,10 @@
     </div>
     <h4>선택 리스트가 아래에 표시됩니다.</h4>
     <div>
-      <b-table striped hover :items="selectList"></b-table>
+      <b-table striped :items="showList"> </b-table>
       <b-button @click="draw">화면에 표시</b-button>
+      <b-button @click="reset">리스트 초기화</b-button>
+      <b-button>매매 정보 추천받기</b-button>
     </div>
     <div id="map" style="width: 100%; height: 350px"></div>
   </div>
@@ -55,6 +57,7 @@ export default {
       ps: null,
       markers: [],
       clusterer: null,
+      showList: [],
       selectList: [],
       select_options: [
         "주소 기반 검색",
@@ -112,7 +115,7 @@ export default {
       var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
       var options = {
         //지도를 생성할 때 필요한 기본 옵션
-        center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+        center: new kakao.maps.LatLng(37.56665905897916, 126.97795793013047), //지도의 중심좌표.
         level: 3, //지도의 레벨(확대, 축소 정도)
       };
 
@@ -128,6 +131,7 @@ export default {
         return this.$data["dong" + index];
       }
     },
+
     categorySearch() {
       console.log(this.$data["category"]);
       this.$data["clusterer"].clear();
@@ -185,10 +189,14 @@ export default {
       closeBtn.appendChild(document.createTextNode("닫기"));
       //선택 이벤트
       selectBtn.onclick = () => {
-        this.$data["selectList"].push({
+        this.$data["showList"].push({
           value: place.place_name,
-          lat: overlay.getPosition().La,
-          lng: overlay.getPosition().Ma,
+          address: place.address_name,
+          phone: place.phone,
+        });
+        this.$data["selectList"].push({
+          lat: overlay.getPosition().Ma,
+          lng: overlay.getPosition().La,
         });
         overlay.setMap(null);
       };
@@ -213,7 +221,7 @@ export default {
     draw() {
       var polygonPath = [];
       this.$data["selectList"].forEach(function (item) {
-        polygonPath.push(new kakao.maps.LatLng(item.lng, item.lat));
+        polygonPath.push(new kakao.maps.LatLng(item.lat, item.lng));
       });
 
       // 지도에 표시할 다각형을 생성합니다
@@ -229,8 +237,19 @@ export default {
 
       // 지도에 다각형을 표시합니다
       polygon.setMap(this.$data["map"]);
+      kakao.maps.event.addListener(polygon, "click", function () {
+        polygon.setMap(null);
+      });
+    },
+    reset() {
+      this.$data["selectList"] = [];
     },
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.map {
+  width: 5000px;
+  height: 4000px;
+}
+</style>
