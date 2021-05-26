@@ -1,14 +1,14 @@
 <template>
-  <MyPage></MyPage>
+  <UserInfo></UserInfo>
 </template>
 
 <script>
-import MyPage from "@/components/MyPage.vue";
+import UserInfo from "@/components/UserInfo.vue";
 
 export default {
   name: "my-page",
   components: {
-    MyPage,
+    UserInfo,
   },
 };
 </script>
