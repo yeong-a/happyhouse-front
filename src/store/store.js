@@ -13,39 +13,21 @@ export default new Vuex.Store({
       detailAddress: "",
     },
   },
-  // getters: {
-  //   getEmail: (state) => {
-  //     return state.user.email;
-  //   },
-  // },
   mutations: {
     logout: (state) => {
       state.user = {};
     },
-    getInfo: (state, payload) => {
-      state.user = payload.user;
-    },
-    modifyInfo: (state, payload) => {
-      state.user = payload.user;
+    setUser: (state, payload) => {
+      state.user = payload;
     },
   },
   actions: {
-    login(store, payload) {
-      return new Promise((resolve, reject) => {
-        http
-          .post(`happyhouse/user/login`, {
-            email: payload.user.email,
-            pwd: payload.user.pwd,
-          })
-          .then(
-            (response) => {
-              resolve(response);
-            },
-            (err) => {
-              reject(err);
-            }
-          );
+    async login(store, payload) {
+      await http.post(`happyhouse/user/login`, {
+        email: payload.user.email,
+        pwd: payload.user.pwd,
       });
+      await store.dispatch("mypage");
     },
     logout(store) {
       http
@@ -56,19 +38,9 @@ export default new Vuex.Store({
         })
         .catch((err) => alert(err.response.data.error));
     },
-    mypage(store) {
-      return new Promise((resolve, reject) => {
-        http.get(`happyhouse/user/mypage`).then(
-          (response) => {
-            store.state.user = response.data.result;
-            resolve(response);
-          },
-          (err) => {
-            reject(err);
-            console.log(err.response.data.error);
-          }
-        );
-      });
+    async mypage(store) {
+      const response = await http.get(`happyhouse/user/mypage`);
+      store.commit("setUser", response.data.result);
     },
     modify(store, payload) {
       http
@@ -79,12 +51,10 @@ export default new Vuex.Store({
         })
         .then(() => {
           console.log("수정 성공");
-          store.commit("modifyInfo", {
-            user: payload.user,
-          });
+          store.commit("setUser", payload.user);
         })
         .catch((err) => {
-          console.log(err.response.data.error);
+          alert(err.response.data.error);
         });
     },
   },
