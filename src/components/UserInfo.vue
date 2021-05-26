@@ -4,29 +4,26 @@
       <label>User Name</label>
       <b-form-input type="text" v-model="this.info.name"></b-form-input>
       <label>User email</label>
-      <b-form-input
-        type="email"
-        v-model="this.info.email"
-        readonly
-      ></b-form-input>
+      <b-form-input type="email" v-model="info.email" readonly></b-form-input>
       <div>
         <b-button @click="execDaumPostcode()">주소 검색</b-button>
         <br />
         <label>주소</label>
         <b-input
-          v-model="this.info.address"
+          v-model="info.address"
           type="text"
-          id="jibunAddress"
           placeholder="지번주소 검색"
         />
       </div>
       <label>상세 주소</label>
       <b-form-input
         type="text"
-        v-model="this.info.detailAddress"
+        v-model="info.detailAddress"
         placeholder="[상세주소]건물 , 동, 호수"
       ></b-form-input>
-      <b-button variant="warning">회원 정보 수정</b-button>
+      <b-button variant="warning" @click="modifyInfo()"
+        >회원 정보 수정</b-button
+      >
     </b-form>
   </div>
 </template>
@@ -64,6 +61,7 @@ export default {
       this.$store.dispatch("mypage");
     },
     execDaumPostcode() {
+      const that = this;
       new window.daum.Postcode({
         oncomplete: function (data) {
           var extraRoadAddr = "";
@@ -79,10 +77,22 @@ export default {
           if (extraRoadAddr !== "") {
             extraRoadAddr = " (" + extraRoadAddr + ")";
           }
-          console.log(data);
-          document.getElementById("jibunAddress").value = data.jibunAddress;
+          that.info.address =
+            data.userSelectedType === "R"
+              ? data.roadAddress
+              : data.jibunAddress;
         },
       }).open();
+    },
+    modifyInfo() {
+      this.$store.dispatch("modify", {
+        user: {
+          email: this.info.email,
+          name: this.info.name,
+          address: this.info.address,
+          detailAddress: this.info.detailAddress,
+        },
+      });
     },
   },
 };

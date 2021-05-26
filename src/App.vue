@@ -12,6 +12,9 @@ export default {
   components: {
     NavHeader,
   },
+  created() {
+    this.$store.dispatch("mypage");
+  },
 };
 </script>
 <style></style>

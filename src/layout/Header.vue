@@ -7,7 +7,7 @@
       <b-button variant="warning" @click="moveSearchPage">추천 기능</b-button>
       <b-button variant="warning" @click="moveQnaPage">QnA 게시판</b-button>
     </div>
-    <div class="col-sm-2" v-if="this.user.email == ''">
+    <div class="col-sm-2" v-if="$store.state.user.email === ''">
       <b-button variant="warning" @click="showLoginModal">로그인</b-button>
       <b-button variant="warning" @click="moveJoinPage">회원가입</b-button>
     </div>
@@ -53,17 +53,7 @@ export default {
         email: "",
         pwd: "",
       },
-      user: {
-        email: "",
-        name: "",
-        address: "",
-        detailAddress: "",
-      },
     };
-  },
-  beforeMount() {
-    console.log("beforeMount:getUserInfo");
-    this.getUserInfo();
   },
   methods: {
     showLoginModal() {
@@ -90,6 +80,7 @@ export default {
     moveQnaPage() {
       this.$router.push("/qna");
     },
+<<<<<<< HEAD
     moveSPPage() {},
     getUserInfo() {
       this.$store
@@ -104,17 +95,21 @@ export default {
     login() {
       this.$store
         .dispatch("login", {
+=======
+    async login() {
+      try {
+        await this.$store.dispatch("login", {
+>>>>>>> 66a905248b1b927109e1b25e5352c7f5e062f4ad
           user: {
             email: this.loginUser.email,
             pwd: this.loginUser.pwd,
           },
-        })
-        .then(() => {
-          this.moveMainPage();
-        })
-        .catch((err) => {
-          console.log("헤더 로그인함수 : " + err);
         });
+      } catch (err) {
+        alert(`로그인 실패: ${err.response.data.error}`);
+        return;
+      }
+      this.hideLoginModal();
     },
     logout() {
       this.$store.dispatch("logout");
