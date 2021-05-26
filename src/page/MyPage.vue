@@ -1,14 +1,14 @@
 <template>
-  <Update></Update>
+  <MyPage></MyPage>
 </template>
 
 <script>
-import Update from "@/components/Update.vue";
+import MyPage from "@/components/MyPage.vue";
 
 export default {
-  name: "update-page",
+  name: "my-page",
   components: {
-    Update,
+    MyPage,
   },
 };
 </script>

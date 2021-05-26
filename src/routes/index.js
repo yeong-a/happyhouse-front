@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import JoinPage from "@/page/JoinPage.vue";
 import DetailPage from "@/page/DetailPage.vue";
 import MainPage from "@/page/MainPage.vue";
-import UpdatePage from "@/page/UpdatePage.vue";
+import MyPage from "@/page/MyPage.vue";
 import SearchPage from "@/page/SearchPage.vue";
 Vue.use(VueRouter);
 
@@ -26,9 +26,9 @@ export const router = new VueRouter({
       component: DetailPage,
     },
     {
-      path: "/update",
-      name: "update-page",
-      component: UpdatePage,
+      path: "/mypage",
+      name: "my-page",
+      component: MyPage,
     },
     {
       path: "/search",

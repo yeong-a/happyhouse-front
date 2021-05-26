@@ -7,22 +7,22 @@
       <b-button variant="warning" @click="moveSearchPage">추천 기능</b-button>
       <b-button variant="warning">QnA 게시판</b-button>
     </div>
-    <div v-if="this.$session.get('email') == null" class="col-sm-2">
+    <div class="col-sm-2" v-if="this.user.email == ''">
       <b-button variant="warning" @click="showLoginModal">로그인</b-button>
       <b-button variant="warning" @click="moveJoinPage">회원가입</b-button>
     </div>
-    <div v-else class="col-sm-2">
+    <div class="col-sm-2" v-else>
       <b-button variant="warning" @click="moveUpdatePage">마이페이지</b-button>
       <b-button variant="warning" @click="logout">로그아웃</b-button>
     </div>
     <b-modal ref="login-modal" hide-footer title="HAPPYHOUSE LOGIN">
       <label for="text-id">ID</label>
-      <b-form-input type="text" id="user_id"></b-form-input>
+      <b-form-input type="text" v-model="loginUser.email"></b-form-input>
       <label for="text-password">Password</label>
       <b-form-input
         type="password"
-        id="password"
         aria-describedby="password-help-block"
+        v-model="loginUser.pwd"
       ></b-form-input>
       <b-button variant="warning" @click="login">로그인</b-button>
       <b-button variant="warning" @click="hideLoginModal">닫기</b-button>
@@ -47,6 +47,24 @@
 <script>
 export default {
   name: "AppHeader",
+  data() {
+    return {
+      loginUser: {
+        email: "",
+        pwd: "",
+      },
+      user: {
+        email: "",
+        name: "",
+        address: "",
+        detailAddress: "",
+      },
+    };
+  },
+  beforeMount() {
+    console.log("beforeMount:getUserInfo");
+    this.getUserInfo();
+  },
   methods: {
     showLoginModal() {
       this.$refs["login-modal"].show();
@@ -58,24 +76,45 @@ export default {
       this.$router.push("/join");
     },
     moveMainPage() {
-      this.$router.push("/").catch(() => {});
+      window.location.replace("/");
     },
     moveDetailPage() {
       this.$router.push("/detail");
     },
     moveUpdatePage() {
-      this.$router.push("/update");
+      this.$router.push("/mypage");
     },
     moveSearchPage() {
       this.$router.push("/search");
     },
+    getUserInfo() {
+      this.$store
+        .dispatch("mypage")
+        .then(() => {
+          this.user = this.$store.state.user;
+        })
+        .catch((err) => {
+          console.log(err.response.data.error);
+        });
+    },
     login() {
-      this.$session.set("email", "june11215@naver.com");
-      this.$session.set("password", "tkdwns12");
-      console.log(this.$session.get("email"));
+      this.$store
+        .dispatch("login", {
+          user: {
+            email: this.loginUser.email,
+            pwd: this.loginUser.pwd,
+          },
+        })
+        .then(() => {
+          this.moveMainPage();
+        })
+        .catch((err) => {
+          console.log("헤더 로그인함수 : " + err);
+        });
     },
     logout() {
-      this.$session.clear();
+      this.$store.dispatch("logout");
+      this.moveMainPage();
     },
   },
 };
