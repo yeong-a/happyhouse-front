@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="top">
     <b-form-select
       style="margin-left: 30px"
       name="select"
@@ -37,7 +37,7 @@
       <b-button @click="reset">리스트 초기화</b-button>
       <b-button>매매 정보 추천받기</b-button>
     </div>
-    <div id="map" style="width: 100%; height: 350px"></div>
+    <div id="map"></div>
   </div>
 </template>
 
@@ -248,8 +248,8 @@ export default {
 };
 </script>
 <style scoped>
-.map {
-  width: 5000px;
-  height: 4000px;
+#top {
+  width: 90%;
+  margin: 0 auto;
 }
 </style>
