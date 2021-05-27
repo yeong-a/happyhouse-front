@@ -1,6 +1,13 @@
 <template>
   <div>
-    <b-table hover :items="items" :fields="fields" sticky-header="600px">
+    <b-table
+      hover
+      :items="items"
+      :fields="fields"
+      sticky-header="600px"
+      show-empty
+      empty-text="검색된 매물이 없습니다."
+    >
       <template #cell(aptName)="data">
         <router-link :to="`/house?aptName=${data.item.aptName}`">
           {{ data.item.aptName }}

@@ -74,16 +74,23 @@ export default {
   },
   methods: {
     async getHousesByDong() {
-      const response = await http.get(
-        `happyhouse/house/search?dong=${this.dong}`
-      );
-      this.items = response.data.result;
-      this.markers = this.items.map(({ aptName, lat, lng }) => ({
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
-        content: `<div style='padding: 5px'>${aptName}</div>`,
-        onClick: () => this.$router.push(`/house?aptName=${aptName}`),
-      }));
+      try {
+        const response = await http.get(
+          `happyhouse/house/search?dong=${this.dong}`
+        );
+        this.items = response.data.result;
+        this.markers = this.items.map(({ aptName, lat, lng }) => ({
+          lat: parseFloat(lat),
+          lng: parseFloat(lng),
+          content: `<div style='padding: 5px'>${aptName}</div>`,
+          onClick: () => this.$router.push(`/house?aptName=${aptName}`),
+        }));
+      } catch (err) {
+        if (err.response.status === 400) {
+          this.items = [];
+          this.markers = [];
+        }
+      }
     },
   },
 };
