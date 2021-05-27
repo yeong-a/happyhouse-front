@@ -18,7 +18,10 @@
         {{ formatDate(data.item.regtime) }}
       </template>
     </b-table>
-    <div class="text-right" v-if="$store.state.user.email !== ''">
+    <div
+      class="text-right"
+      v-if="$store.state.user.email && $store.state.user.email !== ''"
+    >
       <router-link to="/qna/create">
         <b-button variant="primary">등록</b-button>
       </router-link>

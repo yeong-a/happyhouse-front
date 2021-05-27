@@ -53,7 +53,7 @@ export const router = new VueRouter({
       component: QnaListPage,
     },
     {
-      path: "/qna/:type",
+      path: "/qna/create",
       name: "qna-create-page",
       component: QnaCreatePage,
     },
@@ -63,7 +63,7 @@ export const router = new VueRouter({
       component: QnaReadPage,
     },
     {
-      path: "/qna/:type/:no",
+      path: "/qna/update/:no",
       name: "qna-update-page",
       component: QnaUpdatePage,
     },

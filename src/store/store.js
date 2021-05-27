@@ -29,14 +29,10 @@ export default new Vuex.Store({
       });
       await store.dispatch("mypage");
     },
-    logout(store) {
-      http
-        .post(`happyhouse/user/logout`)
-        .then(() => {
-          store.commit("logout");
-          alert("로그아웃");
-        })
-        .catch((err) => alert(err.response.data.error));
+    async logout(store) {
+      await http.post(`happyhouse/user/logout`);
+      store.commit("logout");
+      alert("로그아웃 되었습니다.");
     },
     async mypage(store) {
       try {
