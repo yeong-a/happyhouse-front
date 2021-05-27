@@ -219,7 +219,7 @@ export default {
     },
     displayMarker(place, selectable = true) {
       const marker = new kakao.maps.Marker({
-        map: this.$data["map"],
+        map: this.map,
         position: new kakao.maps.LatLng(place.y, place.x),
       });
       if (selectable) {
@@ -265,6 +265,21 @@ export default {
         kakao.maps.event.addListener(marker, "click", function () {
           overlay.setMap(marker.getMap());
         });
+      } else {
+        const infoWindow = new kakao.maps.InfoWindow({
+          content: `<div style="padding: 8px">${place.place_name}</div>`,
+        });
+        kakao.maps.event.addListener(marker, "mouseover", () => {
+          infoWindow.open(this.map, marker);
+        });
+        kakao.maps.event.addListener(marker, "mouseout", () => {
+          infoWindow.close();
+        });
+        kakao.maps.event.addListener(
+          marker,
+          "click",
+          () => place.onClick && place.onClick()
+        );
       }
       this.clusterer.addMarker(marker);
     },
@@ -332,6 +347,7 @@ export default {
             place_name: aptName,
             x: lng,
             y: lat,
+            onClick: () => this.$router.push(`/house?aptName=${aptName}`),
           },
           false
         );

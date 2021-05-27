@@ -82,7 +82,7 @@ export default {
         this.markers = this.items.map(({ aptName, lat, lng }) => ({
           lat: parseFloat(lat),
           lng: parseFloat(lng),
-          content: `<div style='padding: 5px'>${aptName}</div>`,
+          content: `<div style="padding: 8px">${aptName}</div>`,
           onClick: () => this.$router.push(`/house?aptName=${aptName}`),
         }));
       } catch (err) {
