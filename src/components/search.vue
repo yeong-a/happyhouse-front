@@ -182,14 +182,13 @@ export default {
       this.map.setBounds(bounds);
     },
     categorySearch() {
-      console.log(this.$data["category"]);
       this.$data["clusterer"].clear();
       const center = this.$data["map"].getCenter();
       this.$data["ps"].categorySearch(
         this.$data["category"],
         this.placesSearchCB,
         {
-          radius: 2000,
+          radius: 10000,
           location: new kakao.maps.LatLng(center.getLat(), center.getLng()),
         }
       );
