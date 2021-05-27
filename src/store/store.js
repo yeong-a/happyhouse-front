@@ -42,24 +42,5 @@ export default new Vuex.Store({
         return;
       }
     },
-    modify(store, payload) {
-      http
-        .put(`happyhouse/user/update`, {
-          name: payload.user.name,
-          address: payload.user.address,
-          detailAddress: payload.user.detailAddress,
-        })
-        .then(() => {
-          alert("수정되었습니다.");
-          store.commit("setUser", payload.user);
-        })
-        .catch((err) => {
-          alert(err.response.data.error);
-        });
-    },
-    async getAnswers(store, payload) {
-      const response = await http.get(`happyhouse/qnaboard/answer/${payload}`);
-      store.commit("setAnswers", response.data.result);
-    },
   },
 });

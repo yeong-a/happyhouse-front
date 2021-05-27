@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="mb-5" style="max-width: 1024px">
     <nav-header></nav-header>
     <router-view></router-view>
   </b-container>
