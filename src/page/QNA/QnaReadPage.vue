@@ -28,7 +28,7 @@
         <router-link to="/qna" class="mr-1">
           <b-button>목록</b-button>
         </router-link>
-        <router-link :to="`/qna/update/${this.$route.params.no}`" class="mr-1">
+        <router-link :to="`/qna/update/${$route.params.no}`" class="mr-1">
           <b-button>수정</b-button>
         </router-link>
         <b-button variant="danger" @click="deleteQnA">삭제</b-button>
@@ -78,6 +78,7 @@ export default {
     async deleteQnA() {
       await http.delete(`/happyhouse/qnaboard/${this.$route.params.no}`);
       alert("게시글이 삭제됐습니다.");
+      this.$router.push("/qna");
     },
   },
 };
