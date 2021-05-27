@@ -16,7 +16,7 @@
         </tr>
         <tr>
           <th>날짜</th>
-          <td>{{ question.regtime }}</td>
+          <td>{{ formatDate(question.regtime) }}</td>
         </tr>
         <tr>
           <td colspan="2">
@@ -28,10 +28,17 @@
         <router-link to="/qna" class="mr-1">
           <b-button>목록</b-button>
         </router-link>
-        <router-link :to="`/qna/update/${$route.params.no}`" class="mr-1">
-          <b-button>수정</b-button>
-        </router-link>
-        <b-button variant="danger" @click="deleteQnA">삭제</b-button>
+        <template
+          v-if="
+            $store.state.user.email &&
+            question.email === $store.state.user.email
+          "
+        >
+          <router-link :to="`/qna/update/${$route.params.no}`" class="mr-1">
+            <b-button>수정</b-button>
+          </router-link>
+          <b-button variant="danger" @click="deleteQnA">삭제</b-button>
+        </template>
       </div>
       <!-- <div class="text-center">
       <br />
@@ -60,7 +67,9 @@
 </template>
 
 <script>
+import moment from "moment";
 import http from "@/http-common";
+
 export default {
   name: "read",
   data: function () {
@@ -79,6 +88,9 @@ export default {
       await http.delete(`/happyhouse/qnaboard/${this.$route.params.no}`);
       alert("게시글이 삭제됐습니다.");
       this.$router.push("/qna");
+    },
+    formatDate(date) {
+      return moment(date).format("YYYY-MM-DD HH:mm");
     },
   },
 };
