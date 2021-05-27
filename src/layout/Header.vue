@@ -25,7 +25,7 @@
         v-model="loginUser.pwd"
       ></b-form-input>
       <b-button variant="warning" @click="login">로그인</b-button>
-      <b-button variant="warning" @click="hideLoginModal">닫기</b-button>
+      <b-button variant="warning" @click="moveSPPage">비밀번호 찾기</b-button>
     </b-modal>
     <div class="col-sm-12">
       <h1
@@ -79,6 +79,10 @@ export default {
     },
     moveQnaPage() {
       this.$router.push("/qna");
+    },
+    moveSPPage() {
+      this.$router.push("/searchpassword");
+      this.hideLoginModal();
     },
     async login() {
       try {

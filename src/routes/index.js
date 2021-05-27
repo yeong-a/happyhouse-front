@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import JoinPage from "@/page/JoinPage.vue";
-import DetailPage from "@/page/DetailPage.vue";
 import MainPage from "@/page/MainPage.vue";
 import MyPage from "@/page/MyPage.vue";
 import SearchPage from "@/page/SearchPage.vue";
+import SearchPasswordPage from "@/page/SearchPasswordPage.vue";
 import QnaCreatePage from "@/page/QNA/QnaCreatePage.vue";
 import QnaListPage from "@/page/QNA/QnaListPage.vue";
 import QnaReadPage from "@/page/QNA/QnaReadPage.vue";
@@ -23,11 +23,6 @@ export const router = new VueRouter({
       path: "/join",
       name: "join-page",
       component: JoinPage,
-    },
-    {
-      path: "/detail",
-      name: "detail-page",
-      component: DetailPage,
     },
     {
       path: "/mypage",
@@ -58,6 +53,11 @@ export const router = new VueRouter({
       path: "/qna/:type/:no",
       name: "qna-update-page",
       component: QnaUpdatePage,
+    },
+    {
+      path: "/searchpassword",
+      name: "search-password-page",
+      component: SearchPasswordPage,
     },
   ],
 });

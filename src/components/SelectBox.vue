@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div style="text-align: center">
+    <b-form-select v-model="menu" :options="searchOption">
+      <template #first>
+        <b-form-select-option :value="null" disabled
+          >검색 옵션을 선택해주세요</b-form-select-option
+        >
+      </template>
+    </b-form-select>
+    <div v-if="menu == '동 검색'" style="text-align: center">
       <b-form-select
         style="margin-left: 30px"
         name="sido"
@@ -25,7 +32,14 @@
         text-field="value"
         :options="dongOptions"
       ></b-form-select>
-      <b-button style="margin-left: 30px">상세 정보 검색</b-button>
+      <b-button style="margin-left: 30px">매물 표시</b-button>
+    </div>
+    <div v-if="menu == '아파트 이름 검색'" style="text-align: center">
+      <b-form-input
+        v-model="apartName"
+        placeholder="아파트 이름을 입력해주세요"
+      ></b-form-input>
+      <b-button>검색</b-button>
     </div>
   </div>
 </template>
@@ -36,6 +50,9 @@ import { gugunOptions } from "@/consts";
 export default {
   data() {
     return {
+      searchOption: ["동 검색", "아파트 이름 검색"],
+      menu: null,
+      apartName: "",
       sido: "서울특별시",
       gugun: "종로구",
       dong: null,
