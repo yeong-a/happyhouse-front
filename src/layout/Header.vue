@@ -86,13 +86,18 @@ export default {
           },
         });
       } catch (err) {
+        this.loginUser.email = "";
+        this.loginUser.pwd = "";
         alert(`로그인 실패: ${err.response.data.error}`);
         return;
       }
+      this.loginUser.email = "";
+      this.loginUser.pwd = "";
       this.$bvModal.hide("login-modal");
     },
     async logout() {
       await this.$store.dispatch("logout");
+      this.$router.push("/");
     },
   },
 };

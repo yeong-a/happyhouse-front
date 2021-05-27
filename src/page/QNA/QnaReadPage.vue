@@ -96,6 +96,7 @@ export default {
       await http.post(`/happyhouse/qnaboard/${this.$route.params.no}/answers`, {
         content: this.answer,
       });
+      this.answer = "";
       await this.getAnswers();
     },
     formatDate(date) {

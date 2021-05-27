@@ -196,7 +196,7 @@ export default {
         this.$data["category"],
         this.placesSearchCB,
         {
-          radius: 10000,
+          radius: 5000,
           location: new kakao.maps.LatLng(center.getLat(), center.getLng()),
         }
       );

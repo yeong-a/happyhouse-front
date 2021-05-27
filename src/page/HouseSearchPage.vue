@@ -1,9 +1,9 @@
 <template>
   <b-row>
-    <b-col cols="4">
+    <b-col cols="5">
       <DetailList :items="items" />
     </b-col>
-    <b-col cols="8">
+    <b-col cols="7">
       <b-input-group class="mb-3">
         <b-form-select
           name="sido"

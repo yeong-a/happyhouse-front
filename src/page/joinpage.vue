@@ -55,13 +55,14 @@
         <b-input v-model="detailAddress" placeholder="상세 주소" />
       </b-form-group>
       <div class="text-right">
-        <b-button variant="primary">회원가입</b-button>
+        <b-button variant="primary" @click="join()">회원가입</b-button>
       </div>
     </b-form>
   </div>
 </template>
 
 <script>
+import http from "@/http-common";
 export default {
   data() {
     return {
@@ -108,6 +109,21 @@ export default {
               : data.jibunAddress;
         },
       }).open();
+    },
+    async join() {
+      try {
+        await http.post(`happyhouse/user/signup`, {
+          email: this.email,
+          name: this.name,
+          pwd: this.password,
+          address: this.address,
+          detailAddress: this.detailAddress,
+        });
+        alert("회원가입 되었습니다.");
+        this.$router.push("/");
+      } catch (err) {
+        alert(err.response.data.error);
+      }
     },
   },
 };
