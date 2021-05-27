@@ -1,14 +1,14 @@
 <template>
-  <div id="app">
+  <b-container>
     <nav-header></nav-header>
     <router-view></router-view>
-  </div>
+  </b-container>
 </template>
 
 <script>
 import NavHeader from "./layout/Header.vue";
+
 export default {
-  name: "App",
   components: {
     NavHeader,
   },
@@ -17,9 +17,3 @@ export default {
   },
 };
 </script>
-<style>
-#app {
-  width: 80%;
-  margin: 0 auto;
-}
-</style>

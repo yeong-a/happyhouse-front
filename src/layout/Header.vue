@@ -2,9 +2,9 @@
   <div>
     <b-navbar toggleable="lg">
       <router-link to="/" custom v-slot="{ href, navigate }">
-        <b-navbar-brand :href="href" @click="navigate"
-          >HAPPY HOUSE</b-navbar-brand
-        >
+        <b-navbar-brand :href="href" @click="navigate" class="font-weight-bold">
+          HAPPY HOUSE
+        </b-navbar-brand>
       </router-link>
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>

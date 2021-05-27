@@ -54,6 +54,7 @@
         hover
         :fields="fields"
         :items="selectedPlaces"
+        sticky-header="250px"
         show-empty
         empty-text="선택된 장소가 없습니다."
       >
