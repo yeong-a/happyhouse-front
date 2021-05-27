@@ -60,23 +60,29 @@
       </b-table>
       <div class="d-flex justify-content-between mb-3">
         <div>
-          <b-button @click="draw">화면에 표시</b-button>
-          <b-button variant="success" class="ml-2">매매 정보 추천받기</b-button>
+          <b-button @click="drawPolygon">화면에 표시</b-button>
+          <b-button variant="success" class="ml-2" @click="getRecommendedHouses"
+            >매매 정보 추천받기</b-button
+          >
         </div>
-        <b-button variant="danger" @click="reset">리스트 초기화</b-button>
+        <b-button variant="danger" @click="reset">초기화</b-button>
       </div>
     </div>
-    <div id="map"></div>
+    <b-overlay :show="loading">
+      <div id="map"></div>
+    </b-overlay>
   </div>
 </template>
 
 <script>
 /* global kakao */
 import axios from "axios";
+import http from "@/http-common";
 
 export default {
   data() {
     return {
+      loading: false,
       address: "",
       category: undefined,
       keyword: "",
@@ -116,6 +122,7 @@ export default {
         { value: "HP8", text: "병원" },
         { value: "PM9", text: "약국" },
       ],
+      polygon: null,
     };
   },
   mounted() {
@@ -182,7 +189,7 @@ export default {
       this.map.setBounds(bounds);
     },
     categorySearch() {
-      this.$data["clusterer"].clear();
+      this.clearMap();
       const center = this.$data["map"].getCenter();
       this.$data["ps"].categorySearch(
         this.$data["category"],
@@ -194,7 +201,7 @@ export default {
       );
     },
     keywordSearch() {
-      this.$data["clusterer"].clear();
+      this.clearMap();
       this.$data["ps"].keywordSearch(
         this.$data["keyword"],
         this.placesSearchCB
@@ -210,65 +217,78 @@ export default {
         this.$data["map"].setBounds(bounds);
       }
     },
-    displayMarker(place) {
+    displayMarker(place, selectable = true) {
       const marker = new kakao.maps.Marker({
         map: this.$data["map"],
         position: new kakao.maps.LatLng(place.y, place.x),
       });
-
-      const content = document.createElement("div");
-      Object.assign(content.style, {
-        padding: "8px",
-        background: "white",
-        marginTop: "-100px",
-        border: "1px solid #777",
-        borderRadius: "4px",
-      });
-      const info = document.createElement("span");
-      info.style.marginRight = "8px";
-      info.textContent = place.place_name;
-      content.appendChild(info);
-      const selectBtn = document.createElement("button");
-      selectBtn.textContent = "선택";
-      selectBtn.classList.add("btn", "btn-primary", "btn-sm");
-      selectBtn.onclick = () => {
-        this.selectedPlaces.push({
-          name: place.place_name,
-          address: place.address_name,
-          phone: place.phone,
-          lat: parseFloat(place.y),
-          lng: parseFloat(place.x),
+      if (selectable) {
+        const content = document.createElement("div");
+        Object.assign(content.style, {
+          padding: "8px",
+          background: "white",
+          marginTop: "-100px",
+          border: "1px solid #777",
+          borderRadius: "4px",
+        });
+        const info = document.createElement("span");
+        info.style.marginRight = "8px";
+        info.textContent = place.place_name;
+        content.appendChild(info);
+        const selectBtn = document.createElement("button");
+        selectBtn.textContent = "선택";
+        selectBtn.classList.add("btn", "btn-primary", "btn-sm");
+        selectBtn.onclick = () => {
+          this.selectedPlaces.push({
+            name: place.place_name,
+            address: place.address_name,
+            phone: place.phone,
+            lat: parseFloat(place.y),
+            lng: parseFloat(place.x),
+          });
+          overlay.setMap(null);
+        };
+        const closeBtn = document.createElement("button");
+        closeBtn.classList.add("btn", "btn-secondary", "btn-sm", "ml-1");
+        closeBtn.textContent = "닫기";
+        closeBtn.onclick = function () {
+          overlay.setMap(null);
+        };
+        content.appendChild(selectBtn);
+        content.appendChild(closeBtn);
+        let overlay = new kakao.maps.CustomOverlay({
+          content: content,
+          map: marker.getMap(),
+          position: marker.getPosition(),
         });
         overlay.setMap(null);
-      };
-      const closeBtn = document.createElement("button");
-      closeBtn.classList.add("btn", "btn-secondary", "btn-sm", "ml-1");
-      closeBtn.textContent = "닫기";
-      closeBtn.onclick = function () {
-        overlay.setMap(null);
-      };
-      content.appendChild(selectBtn);
-      content.appendChild(closeBtn);
-      let overlay = new kakao.maps.CustomOverlay({
-        content: content,
-        map: marker.getMap(),
-        position: marker.getPosition(),
-      });
-      overlay.setMap(null);
-      kakao.maps.event.addListener(marker, "click", function () {
-        overlay.setMap(marker.getMap());
-      });
-
-      this.$data["clusterer"].addMarker(marker);
+        kakao.maps.event.addListener(marker, "click", function () {
+          overlay.setMap(marker.getMap());
+        });
+      }
+      this.clusterer.addMarker(marker);
     },
-    draw() {
-      const polygonPath = [];
-      this.selectedPlaces.forEach(({ lat, lng }) => {
-        polygonPath.push(new kakao.maps.LatLng(lat, lng));
-      });
-
-      // 지도에 표시할 다각형을 생성합니다
-      const polygon = new kakao.maps.Polygon({
+    clearMap() {
+      this.clearPolygon();
+      this.clearClusterer();
+    },
+    clearClusterer() {
+      if (this.clusterer) {
+        this.clusterer.clear();
+      }
+    },
+    clearPolygon() {
+      if (this.polygon) {
+        this.polygon.setMap(null);
+        this.polygon = null;
+      }
+    },
+    drawPolygon() {
+      this.clearPolygon();
+      const polygonPath = this.selectedPlaces.map(
+        ({ lat, lng }) => new kakao.maps.LatLng(lat, lng)
+      );
+      this.polygon = new kakao.maps.Polygon({
         path: polygonPath, // 그려질 다각형의 좌표 배열입니다
         strokeWeight: 3, // 선의 두께입니다
         strokeColor: "#39DE2A", // 선의 색깔입니다
@@ -277,15 +297,45 @@ export default {
         fillColor: "#A2FF99", // 채우기 색깔입니다
         fillOpacity: 0.7, // 채우기 불투명도 입니다
       });
-
-      // 지도에 다각형을 표시합니다
-      polygon.setMap(this.$data["map"]);
-      kakao.maps.event.addListener(polygon, "click", function () {
-        polygon.setMap(null);
-      });
+      this.polygon.setMap(this.map);
     },
     reset() {
       this.selectedPlaces = [];
+      this.clearMap();
+    },
+    async getRecommendedHouses() {
+      const center = this.selectedPlaces.reduce(
+        (sum, { lat, lng }) => ({
+          lat: sum.lat + parseFloat(lat),
+          lng: sum.lng + parseFloat(lng),
+        }),
+        {
+          lat: 0,
+          lng: 0,
+        }
+      );
+      center.lat /= this.selectedPlaces.length;
+      center.lng /= this.selectedPlaces.length;
+      this.loading = true;
+      const response = await http.get("/happyhouse/house/search-around", {
+        params: {
+          lat: center.lat,
+          lng: center.lng,
+          distance: 1000,
+        },
+      });
+      this.loading = false;
+      this.clearClusterer();
+      response.data.result.forEach(({ aptName, lat, lng }) => {
+        this.displayMarker(
+          {
+            place_name: aptName,
+            x: lng,
+            y: lat,
+          },
+          false
+        );
+      });
     },
   },
 };
