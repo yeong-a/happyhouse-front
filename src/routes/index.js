@@ -4,13 +4,14 @@ import JoinPage from "@/page/JoinPage.vue";
 import MainPage from "@/page/MainPage.vue";
 import MyPage from "@/page/MyPage.vue";
 import SearchPage from "@/page/SearchPage.vue";
-import SearchPasswordPage from "@/page/SearchPasswordPage.vue";
-import DetailPage from "@/page/DetailPage.vue";
-import HouseDetail from "@/page/HouseDetail.vue";
+import FindPasswordPage from "@/page/FindPasswordPage.vue";
+import HouseSearchPage from "@/page/HouseSearchPage.vue";
+import HouseDetailPage from "@/page/HouseDetailPage.vue";
 import QnaCreatePage from "@/page/QNA/QnaCreatePage.vue";
 import QnaListPage from "@/page/QNA/QnaListPage.vue";
 import QnaReadPage from "@/page/QNA/QnaReadPage.vue";
 import QnaUpdatePage from "@/page/QNA/QnaUpdatePage.vue";
+
 Vue.use(VueRouter);
 
 export const router = new VueRouter({
@@ -39,12 +40,12 @@ export const router = new VueRouter({
     {
       path: "/detail",
       name: "detail-page",
-      component: DetailPage,
+      component: HouseSearchPage,
     },
     {
       path: "/house",
       name: "house-page",
-      component: HouseDetail,
+      component: HouseDetailPage,
     },
     {
       path: "/qna",
@@ -69,7 +70,7 @@ export const router = new VueRouter({
     {
       path: "/searchpassword",
       name: "search-password-page",
-      component: SearchPasswordPage,
+      component: FindPasswordPage,
     },
   ],
 });
