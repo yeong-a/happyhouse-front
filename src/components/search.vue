@@ -1,41 +1,70 @@
 <template>
-  <div id="top">
-    <b-form-select
-      style="margin-left: 30px"
-      name="select"
-      id="select"
-      v-model="select"
-      :options="select_options"
-    ></b-form-select>
-    <div v-if="select === '카테고리 기반 검색'">
-      <b-form-select
-        style="margin-left: 30px"
-        name="categoty"
-        id="categoty"
-        v-model="category"
-        text-field="text"
-        :options="category_options"
-      ></b-form-select>
-      <b-button @click="categorySearch">카테고리 검색</b-button>
-    </div>
-    <div v-else-if="select === '주소 기반 검색'">
-      <address-api></address-api>
-    </div>
-    <div v-else-if="select === '키워드 기반 검색'">
-      <b-form-input
-        type="text"
-        v-model="keyword"
-        id="keyword"
-        required
-      ></b-form-input>
-      <b-button @click="keywordSearch">키워드 검색</b-button>
-    </div>
-    <h4>선택 리스트가 아래에 표시됩니다.</h4>
+  <div>
+    <b-tabs content-class="mt-3 mb-3" no-fade>
+      <b-tab title="주소 기반 검색" active>
+        <div class="d-flex">
+          <b-input
+            v-model="address"
+            placeholder="검색할 주소를 입력해주세요."
+          />
+          <b-button
+            variant="primary"
+            class="flex-shrink-0 ml-2"
+            @click="addAddress(address)"
+          >
+            주소 검색
+          </b-button>
+        </div>
+      </b-tab>
+      <b-tab title="키워드 기반 검색">
+        <div class="d-flex">
+          <b-form-input
+            v-model="keyword"
+            placeholder="검색할 키워드를 입력하세요."
+            required
+          ></b-form-input>
+          <b-button
+            variant="primary"
+            class="flex-shrink-0 ml-2"
+            @click="keywordSearch"
+          >
+            키워드 검색
+          </b-button>
+        </div>
+      </b-tab>
+      <b-tab title="카테고리 기반 검색">
+        <div class="d-flex">
+          <b-form-select
+            name="categoty"
+            v-model="category"
+            :options="categoryOptions"
+          ></b-form-select>
+          <b-button
+            variant="primary"
+            class="flex-shrink-0 ml-2"
+            @click="categorySearch"
+            >카테고리 검색</b-button
+          >
+        </div>
+      </b-tab>
+    </b-tabs>
     <div>
-      <b-table striped :items="showList"> </b-table>
-      <b-button @click="draw">화면에 표시</b-button>
-      <b-button @click="reset">리스트 초기화</b-button>
-      <b-button>매매 정보 추천받기</b-button>
+      <b-table
+        striped
+        hover
+        :fields="fields"
+        :items="selectedPlaces"
+        show-empty
+        empty-text="선택된 장소가 없습니다."
+      >
+      </b-table>
+      <div class="d-flex justify-content-between mb-3">
+        <div>
+          <b-button @click="draw">화면에 표시</b-button>
+          <b-button variant="success" class="ml-2">매매 정보 추천받기</b-button>
+        </div>
+        <b-button variant="danger" @click="reset">리스트 초기화</b-button>
+      </div>
     </div>
     <div id="map"></div>
   </div>
@@ -43,28 +72,31 @@
 
 <script>
 /* global kakao */
-import AddressApi from "@/components/AddressAPI.vue";
+import axios from "axios";
+
 export default {
-  components: {
-    AddressApi,
-  },
   data() {
     return {
-      select: "",
-      category: "",
+      address: "",
+      category: undefined,
       keyword: "",
       map: null,
       ps: null,
       markers: [],
       clusterer: null,
-      showList: [],
-      selectList: [],
-      select_options: [
-        "주소 기반 검색",
-        "키워드 기반 검색",
-        "카테고리 기반 검색",
+      fields: [
+        {
+          key: "name",
+          label: "이름",
+        },
+        {
+          key: "address",
+          label: "주소",
+        },
+        { key: "phone", label: "전화번호" },
       ],
-      category_options: [
+      selectedPlaces: [],
+      categoryOptions: [
         { value: "MT1", text: "대형마트" },
         { value: "CS2", text: "편의점" },
         { value: "PS3", text: "어린이집" },
@@ -99,6 +131,7 @@ export default {
       disableClickZoom: true,
     });
     this.$data["ps"] = new kakao.maps.services.Places();
+    window.ps = this.ps;
     this.$data["infowindow"] = new kakao.maps.InfoWindow({
       zIndex: 1,
     });
@@ -112,30 +145,46 @@ export default {
       document.head.appendChild(script);
     },
     initMap() {
-      var container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
-      var options = {
-        //지도를 생성할 때 필요한 기본 옵션
-        center: new kakao.maps.LatLng(37.56665905897916, 126.97795793013047), //지도의 중심좌표.
-        level: 3, //지도의 레벨(확대, 축소 정도)
+      const container = document.getElementById("map");
+      const options = {
+        center: new kakao.maps.LatLng(37.56665905897916, 126.97795793013047),
+        level: 3,
       };
-
-      this.$data["map"] = new kakao.maps.Map(container, options); // eslint-disable-line no-unused-vars
+      this.$data["map"] = new kakao.maps.Map(container, options);
     },
-    selectDong(s_value) {
-      var index = this.gugunoption.findIndex(function (item) {
-        return item.value === s_value;
-      });
-      if (index == -1) {
-        return [""];
-      } else {
-        return this.$data["dong" + index];
+    async addAddress(address) {
+      const response = await axios.get(
+        "https://dapi.kakao.com/v2/local/search/address.json",
+        {
+          headers: {
+            Authorization: "KakaoAK 4a14862b0989308942cb45c7d31e5a92",
+          },
+          params: {
+            query: address,
+          },
+        }
+      );
+      if (response.data.meta.total_count === 0) {
+        alert("검색 결과가 없습니다.");
+        return;
       }
+      const bounds = new kakao.maps.LatLngBounds();
+      response.data.documents.forEach(({ address_name, x, y }) => {
+        this.displayMarker({
+          place_name: address_name,
+          address_name,
+          phone: "",
+          x: x,
+          y: y,
+        });
+        bounds.extend(new kakao.maps.LatLng(y, x));
+      });
+      this.map.setBounds(bounds);
     },
-
     categorySearch() {
       console.log(this.$data["category"]);
       this.$data["clusterer"].clear();
-      var center = this.$data["map"].getCenter();
+      const center = this.$data["map"].getCenter();
       this.$data["ps"].categorySearch(
         this.$data["category"],
         this.placesSearchCB,
@@ -152,55 +201,50 @@ export default {
         this.placesSearchCB
       );
     },
-    placesSearchCB(
-      data,
-      status,
-      pagination // eslint-disable-line no-unused-vars
-    ) {
+    placesSearchCB(data, status) {
       if (status === kakao.maps.services.Status.OK) {
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-        // LatLngBounds 객체에 좌표를 추가합니다
-        var bounds = new kakao.maps.LatLngBounds();
-
-        for (var i = 0; i < data.length; i++) {
+        const bounds = new kakao.maps.LatLngBounds();
+        for (let i = 0; i < data.length; i++) {
           this.displayMarker(data[i]);
           bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
-
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
         this.$data["map"].setBounds(bounds);
       }
     },
-    // 지도에 마커를 표시하는 함수입니다
     displayMarker(place) {
-      // 마커를 생성하고 지도에 표시합니다
-      var marker = new kakao.maps.Marker({
+      const marker = new kakao.maps.Marker({
         map: this.$data["map"],
         position: new kakao.maps.LatLng(place.y, place.x),
       });
 
-      var content = document.createElement("div");
-      var info = document.createElement("span");
-      info.appendChild(document.createTextNode(place.place_name));
+      const content = document.createElement("div");
+      Object.assign(content.style, {
+        padding: "8px",
+        background: "white",
+        marginTop: "-100px",
+        border: "1px solid #777",
+        borderRadius: "4px",
+      });
+      const info = document.createElement("span");
+      info.style.marginRight = "8px";
+      info.textContent = place.place_name;
       content.appendChild(info);
-      var selectBtn = document.createElement("button");
-      selectBtn.appendChild(document.createTextNode("선택"));
-      var closeBtn = document.createElement("button");
-      closeBtn.appendChild(document.createTextNode("닫기"));
-      //선택 이벤트
+      const selectBtn = document.createElement("button");
+      selectBtn.textContent = "선택";
+      selectBtn.classList.add("btn", "btn-primary", "btn-sm");
       selectBtn.onclick = () => {
-        this.$data["showList"].push({
-          value: place.place_name,
+        this.selectedPlaces.push({
+          name: place.place_name,
           address: place.address_name,
           phone: place.phone,
-        });
-        this.$data["selectList"].push({
-          lat: overlay.getPosition().Ma,
-          lng: overlay.getPosition().La,
+          lat: parseFloat(place.y),
+          lng: parseFloat(place.x),
         });
         overlay.setMap(null);
       };
-      // 닫기 이벤트 추가
+      const closeBtn = document.createElement("button");
+      closeBtn.classList.add("btn", "btn-secondary", "btn-sm", "ml-1");
+      closeBtn.textContent = "닫기";
       closeBtn.onclick = function () {
         overlay.setMap(null);
       };
@@ -219,13 +263,13 @@ export default {
       this.$data["clusterer"].addMarker(marker);
     },
     draw() {
-      var polygonPath = [];
-      this.$data["selectList"].forEach(function (item) {
-        polygonPath.push(new kakao.maps.LatLng(item.lat, item.lng));
+      const polygonPath = [];
+      this.selectedPlaces.forEach(({ lat, lng }) => {
+        polygonPath.push(new kakao.maps.LatLng(lat, lng));
       });
 
       // 지도에 표시할 다각형을 생성합니다
-      var polygon = new kakao.maps.Polygon({
+      const polygon = new kakao.maps.Polygon({
         path: polygonPath, // 그려질 다각형의 좌표 배열입니다
         strokeWeight: 3, // 선의 두께입니다
         strokeColor: "#39DE2A", // 선의 색깔입니다
@@ -242,14 +286,8 @@ export default {
       });
     },
     reset() {
-      this.$data["selectList"] = [];
+      this.selectedPlaces = [];
     },
   },
 };
 </script>
-<style scoped>
-#top {
-  width: 90%;
-  margin: 0 auto;
-}
-</style>

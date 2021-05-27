@@ -3,6 +3,7 @@
 </template>
 
 <script>
+/* global kakao */
 export default {
   props: {
     markers: Array,
@@ -21,7 +22,6 @@ export default {
   methods: {
     addKakaoMapScript() {
       const script = document.createElement("script");
-      /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
         "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=96bb589a4d5df7cd55f2ca8c67b7c7fc&libraries=services,clusterer,drawing";
@@ -39,13 +39,11 @@ export default {
     showMarkers(newMarkers) {
       this.markerRefs.forEach((marker) => marker.setMap(null));
       if (newMarkers && newMarkers.length > 0) {
-        const center = newMarkers.reduce(
-          (sum, { lat, lng }) => ({ lat: sum.lat + lat, lng: sum.lng + lng }),
-          { lat: 0, lng: 0 }
-        );
-        center.lat /= newMarkers.length;
-        center.lng /= newMarkers.length;
-        this.map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
+        const bounds = new kakao.maps.LatLngBounds();
+        newMarkers.forEach(({ lat, lng }) => {
+          bounds.extend(new kakao.maps.LatLng(lat, lng));
+        });
+        this.map.setBounds(bounds);
         const markers = newMarkers.map(
           ({ lat, lng, content = "", onClick = () => {} }) => {
             const marker = new kakao.maps.Marker({
