@@ -6,22 +6,41 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    formType: "",
     user: {
       email: "",
       name: "",
       address: "",
       detailAddress: "",
     },
+    question: {},
+    questions: [],
+    answers: [],
   },
   mutations: {
+    changeType: (state, payload) => {
+      state.formType = payload;
+    },
     logout: (state) => {
       state.user = {};
     },
     setUser: (state, payload) => {
       state.user = payload;
     },
+    setQuestion: (state, payload) => {
+      state.question = payload;
+    },
+    setQuestions: (state, payload) => {
+      state.questions = payload;
+    },
+    setAnswers: (state, payload) => {
+      state.answers = payload;
+    },
   },
   actions: {
+    async changeType(store, payload) {
+      await store.commit("changeType", payload);
+    },
     async login(store, payload) {
       await http.post(`happyhouse/user/login`, {
         email: payload.user.email,
@@ -50,13 +69,20 @@ export default new Vuex.Store({
           detailAddress: payload.user.detailAddress,
         })
         .then(() => {
-          console.log("수정 성공");
+          alert("수정되었습니다.");
           store.commit("setUser", payload.user);
         })
         .catch((err) => {
           alert(err.response.data.error);
         });
     },
+    async getQuestion(store, payload) {
+      const response = await http.get(`happyhouse/qnaboard/${payload}`);
+      store.commit("setQuestion", response.data.result);
+    },
+    async getAnswers(store, payload) {
+      const response = await http.get(`happyhouse/qnaboard/answer/${payload}`);
+      store.commit("setAnswers", response.data.result);
+    },
   },
-  modules: {},
 });

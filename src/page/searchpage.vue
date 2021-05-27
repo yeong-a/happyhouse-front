@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <Search></Search>
-    </div>
+  <div>
+    <Search></Search>
+  </div>
 </template>
 
 <script>
 import Search from "@/components/Search.vue";
 export default {
-    components: { Search },
+  components: { Search },
 };
 </script>
 

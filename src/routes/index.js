@@ -8,6 +8,7 @@ import SearchPage from "@/page/SearchPage.vue";
 import QnaCreatePage from "@/page/QNA/QnaCreatePage.vue";
 import QnaListPage from "@/page/QNA/QnaListPage.vue";
 import QnaReadPage from "@/page/QNA/QnaReadPage.vue";
+import QnaUpdatePage from "@/page/QNA/QnaUpdatePage.vue";
 Vue.use(VueRouter);
 
 export const router = new VueRouter({
@@ -41,17 +42,22 @@ export const router = new VueRouter({
     {
       path: "/qna",
       name: "qna-page",
-      comments: QnaListPage,
+      component: QnaListPage,
     },
     {
-      path: "/qna/create",
+      path: "/qna/:type",
       name: "qna-create-page",
-      comments: QnaCreatePage,
+      component: QnaCreatePage,
     },
     {
       path: "/qna/read/:no",
       name: "qna-read-page",
-      comments: QnaReadPage,
+      component: QnaReadPage,
+    },
+    {
+      path: "/qna/:type/:no",
+      name: "qna-update-page",
+      component: QnaUpdatePage,
     },
   ],
 });

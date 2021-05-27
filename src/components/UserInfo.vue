@@ -2,7 +2,7 @@
   <div>
     <b-form @submit.stop.prevent>
       <label>User Name</label>
-      <b-form-input type="text" v-model="this.info.name"></b-form-input>
+      <b-form-input type="text" v-model="info.name"></b-form-input>
       <label>User email</label>
       <b-form-input type="email" v-model="info.email" readonly></b-form-input>
       <div>
