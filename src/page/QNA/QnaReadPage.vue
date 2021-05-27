@@ -24,16 +24,16 @@
           </td>
         </tr>
       </table>
-      <div class="text-center">
-        <router-link :to="'/qna'"
-          ><button class="btn btn-primary">목록</button></router-link
-        >
-        <router-link :to="`/qna/update/${this.$route.params.no}`"
-          ><button class="btn btn-primary">수정</button></router-link
-        >
-        <router-link :to="`/qna/delete/${this.$route.params.no}`"
-          ><button class="btn btn-primary">삭제</button></router-link
-        >
+      <div class="text-right">
+        <router-link to="/qna" class="mr-1">
+          <b-button>목록</b-button>
+        </router-link>
+        <router-link :to="`/qna/update/${this.$route.params.no}`" class="mr-1">
+          <b-button>수정</b-button>
+        </router-link>
+        <router-link :to="`/qna/delete/${this.$route.params.no}`">
+          <b-button variant="danger">삭제</b-button>
+        </router-link>
       </div>
       <!-- <div class="text-center">
       <br />

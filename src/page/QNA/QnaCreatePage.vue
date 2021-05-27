@@ -12,25 +12,27 @@
     <div class="form-group">
       <label>제목</label>
       <input
-        type="text"
         class="form-control"
         placeholder="제목을 입력하세요"
         v-model="question.title"
+        required
       />
     </div>
     <div class="form-group">
       <label>내용</label>
       <textarea
-        type="text"
         class="form-control"
         placeholder="내용을 입력하세요"
         v-model="question.content"
+        required
       ></textarea>
     </div>
     <div class="text-right">
-      <button class="btn btn-primary" @click="createQuestion()">등록</button>
-      <router-link tag="button" class="btn btn-primary" to="/qna">
-        목록
+      <b-button variant="primary" @click="createQuestion()" class="mr-1"
+        >등록</b-button
+      >
+      <router-link to="/qna" v-slot="{ navigate }">
+        <b-button @click="navigate">목록</b-button>
       </router-link>
     </div>
   </div>
