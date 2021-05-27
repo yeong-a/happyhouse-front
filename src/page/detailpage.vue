@@ -1,12 +1,11 @@
 <template>
-  <div class="row">
-    <div class="col-sm-4">
+  <b-row>
+    <b-col cols="4">
       <DetailList :items="items" />
-    </div>
-    <div class="col-sm-8">
-      <div style="text-align: center">
+    </b-col>
+    <b-col cols="8">
+      <b-input-group class="mb-3">
         <b-form-select
-          style="margin-left: 30px"
           name="sido"
           id="sido"
           v-model="sido"
@@ -14,7 +13,6 @@
           :options="sidoOptions"
         ></b-form-select>
         <b-form-select
-          style="margin-left: 30px"
           name="gugun"
           id="gugun"
           text-field="value"
@@ -22,20 +20,19 @@
           :options="gugunOptions"
         ></b-form-select>
         <b-form-select
-          style="margin-left: 30px"
           name="dong"
           id="dong"
           v-model="dong"
           text-field="value"
           :options="dongOptions"
         ></b-form-select>
-        <b-button style="margin-left: 30px" @click="getHousesByDong"
-          >매물 표시</b-button
-        >
-      </div>
+        <b-input-group-append>
+          <b-button @click="getHousesByDong">매물 표시</b-button>
+        </b-input-group-append>
+      </b-input-group>
       <Map :markers="markers"></Map>
-    </div>
-  </div>
+    </b-col>
+  </b-row>
 </template>
 
 <script>

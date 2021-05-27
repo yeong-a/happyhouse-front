@@ -39,8 +39,12 @@ export default new Vuex.Store({
         .catch((err) => alert(err.response.data.error));
     },
     async mypage(store) {
-      const response = await http.get(`happyhouse/user/mypage`);
-      store.commit("setUser", response.data.result);
+      try {
+        const response = await http.get(`happyhouse/user/mypage`);
+        store.commit("setUser", response.data.result);
+      } catch (err) {
+        return;
+      }
     },
     modify(store, payload) {
       http

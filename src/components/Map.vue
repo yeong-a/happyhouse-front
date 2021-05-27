@@ -38,7 +38,7 @@ export default {
     },
     showMarkers(newMarkers) {
       this.markerRefs.forEach((marker) => marker.setMap(null));
-      if (newMarkers.length > 0) {
+      if (newMarkers && newMarkers.length > 0) {
         const center = newMarkers.reduce(
           (sum, { lat, lng }) => ({ lat: sum.lat + lat, lng: sum.lng + lng }),
           { lat: 0, lng: 0 }
@@ -46,25 +46,25 @@ export default {
         center.lat /= newMarkers.length;
         center.lng /= newMarkers.length;
         this.map.setCenter(new kakao.maps.LatLng(center.lat, center.lng));
+        const markers = newMarkers.map(
+          ({ lat, lng, content = "", onClick = () => {} }) => {
+            const marker = new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(lat, lng),
+            });
+            marker.setMap(this.map);
+            const infoWindow = new kakao.maps.InfoWindow({ content });
+            kakao.maps.event.addListener(marker, "mouseover", () => {
+              infoWindow.open(this.map, marker);
+            });
+            kakao.maps.event.addListener(marker, "mouseout", () => {
+              infoWindow.close();
+            });
+            kakao.maps.event.addListener(marker, "click", () => onClick());
+            return marker;
+          }
+        );
+        this.markerRefs = markers;
       }
-      const markers = newMarkers.map(
-        ({ lat, lng, content = "", onClick = () => {} }) => {
-          const marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(lat, lng),
-          });
-          marker.setMap(this.map);
-          const infoWindow = new kakao.maps.InfoWindow({ content });
-          kakao.maps.event.addListener(marker, "mouseover", () => {
-            infoWindow.open(this.map, marker);
-          });
-          kakao.maps.event.addListener(marker, "mouseout", () => {
-            infoWindow.close();
-          });
-          kakao.maps.event.addListener(marker, "click", () => onClick());
-          return marker;
-        }
-      );
-      this.markerRefs = markers;
     },
   },
   watch: {
@@ -78,6 +78,6 @@ export default {
 <style>
 #map {
   margin: 0 auto;
-  height: 600px !important;
+  height: 500px !important;
 }
 </style>

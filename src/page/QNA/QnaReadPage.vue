@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <table class="table table-bordered w-50">
+      <table class="table table-bordered">
         <tr>
           <th>번호</th>
           <td>{{ question.no }}</td>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-table :items="items" :fields="fields" sticky-header="600px">
+    <b-table hover :items="items" :fields="fields" sticky-header="600px">
       <template #cell(aptName)="data">
         <router-link :to="`/house?aptName=${data.item.aptName}`">
           {{ data.item.aptName }}
