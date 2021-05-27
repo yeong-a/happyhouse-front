@@ -11,7 +11,11 @@ export default new Vuex.Store({
       name: "",
       address: "",
       detailAddress: "",
+      admin: false,
     },
+  },
+  getters: {
+    isAdmin: (state) => state.user.admin,
   },
   mutations: {
     logout: (state) => {
