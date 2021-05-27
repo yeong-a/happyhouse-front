@@ -1,16 +1,16 @@
 <template>
-    <div>
-        <update-form type="update" />
-    </div>
+  <div>
+    <update-form type="update" />
+  </div>
 </template>
 
 <script>
 import UpdateForm from "@/components/QNA/QnaForm.vue";
 export default {
-    name: "update",
-    components: {
-        UpdateForm,
-    },
+  name: "update",
+  components: {
+    UpdateForm,
+  },
 };
 </script>
 

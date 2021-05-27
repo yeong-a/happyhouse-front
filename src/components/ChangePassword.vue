@@ -51,12 +51,13 @@ export default {
 
   computed: {
     pwvalidation() {
-      return this.pwcheck.length > 2 && this.password === this.pwcheck;
+      return this.pwcheck.length > 2 && this.password == this.pwcheck;
     },
     uservalidation() {
       return this.$data["prePassword"] === this.userPassword;
     },
   },
+  //created시 get통해서 userPassword에 기존 비밀번호 값 부여
 };
 </script>
 

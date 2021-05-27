@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <search-password />
+  <div class="row">
+    <h4>비밀번호 찾기</h4>
+    <SearchPassword />
   </div>
 </template>
 

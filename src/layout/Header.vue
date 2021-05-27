@@ -82,6 +82,7 @@ export default {
     },
     moveSPPage() {
       this.$router.push("/searchpassword");
+      this.hideLoginModal();
     },
     async login() {
       try {

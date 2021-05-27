@@ -57,7 +57,7 @@ export const router = new VueRouter({
     {
       path: "/searchpassword",
       name: "search-password-page",
-      comments : SearchPasswordPage
+      component: SearchPasswordPage,
     },
   ],
 });
